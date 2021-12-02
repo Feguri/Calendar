@@ -11,77 +11,47 @@
     <title>My Calendar</title>
 </head>
 <body>
-    <div class="container">
-        <div class="current-day">
-
-        </div>
-        <div class="calendar">
-            <div class="month">
-                <i class="fas fa-angle-left prev"></i>
-                <div class="date">
-                    <h1>May</h1>
-                    <p>Wed, Dec 01, 2021</p>
+    <div class="wrapper">
+        <div class="container">
+            <div class="my-day">
+                <div class="header">
+                    <h1>My day,</h1>
+                    <div class="date">
+                        <p class="my-day-date current-date" style="font-size: 1.5rem;"></p>
+                    </div>
                 </div>
-                <i class="fas fa-angle-right next"></i>
-                <div class="weekdays">
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
+                <div class="tasks">
+                    <p class="no-select pointer"><span id="plus">+</span> <span class="align-1">Add Task</span> </p>
                 </div>
-                <div class="days">
-                    <div class="prev-date">25</div>
-                    <div class="prev-date">26</div>
-                    <div class="prev-date">27</div>
-                    <div class="prev-date">28</div>
-                    <div class="prev-date">29</div>
-                    <div class="prev-date">30</div>
-                    <div>01</div>
-                    <div>02</div>
-                    <div>03</div>
-                    <div>04</div>
-                    <div>05</div>
-                    <div>06</div>
-                    <div>07</div>
-                    <div>08</div>
-                    <div>09</div>
-                    <div>10</div>
-                    <div>11</div>
-                    <div>12</div>
-                    <div>13</div>
-                    <div>14</div>
-                    <div>15</div>
-                    <div>16</div>
-                    <div>17</div>
-                    <div>18</div>
-                    <div>19</div>
-                    <div>20</div>
-                    <div>21</div>
-                    <div>22</div>
-                    <div>23</div>
-                    <div>24</div>
-                    <div>25</div>
-                    <div>26</div>
-                    <div>27</div>
-                    <div>28</div>
-                    <div>29</div>
-                    <div>30</div>
-                    <div>31</div>
-                    <div class="next-date">01</div>
-                    <div class="next-date">02</div>
-                    <div class="next-date">03</div>
-                    <div class="next-date">04</div>
-                    <div class="next-date">05</div>
-                    <div class="next-date">06</div>
-                    <div class="next-date">07</div>
-                </div>
-
             </div>
 
         </div>
+        <div class="container">
+            <div class="calendar">
+                <div class="month" id='month-bg'>
+                    <i class="fas fa-angle-left prev" id="arrow"></i>
+                    <div class="date">
+                        <h1 id="month"></h1>
+                        <p class="current-date"></p>
+                    </div>
+                    <i class="fas fa-angle-right next" id="arrow"></i>
+                </div>
+                <div class="weekdays">
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                </div>
+                <div class="days">
+    
+                </div>
+    
+            </div>
+        </div>
     </div>
+
 </body>
 </html>

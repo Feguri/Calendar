@@ -12,6 +12,12 @@
     transform: scale(1.25);
 }
 
+#plus {
+    transition: 0.2s;
+    font-size: 3rem;
+    margin-right: 12px;
+}
+
 .wrapper {
     display: flex;
 }
@@ -36,11 +42,6 @@
 }
 .pointer {
     cursor: pointer;
-}
-
-#plus {
-    font-size: 3rem;
-    margin-right: 12px;
 }
 
 .align-1 {

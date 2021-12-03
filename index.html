@@ -21,11 +21,33 @@
                     </div>
                 </div>
                 <div class="tasks">
-                    <p class="no-select pointer"><span id="plus">+</span> <span class="align-1">Add Task</span> </p>
+                    <p class="no-select pointer" id="adder"><span id="plus">+</span> <span class="align-1">Add Task</span> </p>
+                    <div class="task-container" style="display: none;" id="tdd">
+
+                        <label for="task-name" ><p class="mb-2 is-size-4">Task</p></label>
+                        <textarea class="textarea is-info" id="task-name" name="task-name"></textarea>
+                        <div class="time-container mt-5">
+                            <div>
+                                <label for="from"><p class="mb-2">From</p></label>
+                                <input type="text" class="input is-info" id="from">
+                            </div>
+                            <div class="ml-6">
+                                <label for="from"><p class="mb-2">To</p></label>
+                                <input type="text" class="input is-info" id="to">
+                            </div>
+                        </div>
+
+                        <button class="button is-primary mt-6 is-size-5" id="add-btn">Add</button>
+                    </div>
+                    <div class="actual-tasks">
+
+                    </div>
+
                 </div>
             </div>
 
         </div>
+
         <div class="container">
             <div class="calendar">
                 <div class="month" id='month-bg'>
@@ -52,6 +74,7 @@
             </div>
         </div>
     </div>
+
 
 </body>
 </html>

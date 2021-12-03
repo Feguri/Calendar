@@ -5,6 +5,9 @@
     font-family: 'Quicksand', sans-serif;
 }
 
+html {
+    background-color: #12121f !important;
+}
 #arrow {
     transition: 0.2s;
 }
@@ -18,8 +21,35 @@
     margin-right: 12px;
 }
 
+.time-container {
+    display: flex;
+}
+
+.task-container {
+    padding: 15px 40px;
+}
 .wrapper {
     display: flex;
+}
+
+.actual-tasks {
+    padding: 15px 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-time {
+    margin-top: 32px;
+}
+
+.text-task {
+    border-left: 3px solid #3f51b5;
+    padding-left: 30px;
+}
+.time {
+    background-color: #3f51b5;
+    padding: 12px 15px;
+    border-radius: 8px;
 }
 
 .my-day-date {
@@ -27,18 +57,24 @@
 }
 
 .tasks {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+    height: 100vh;
     text-align: left;
     padding: 15px 10px;
+    background-color: #222227;
+    overflow-y: scroll;
 }
 
 .no-select {
     user-select: none;
-    transition: opacity 0.2s ease-in-out;
+}
+
+textarea, input {
+    font-size: 1.4rem!important;
 }
 
 .no-select:hover {
-    opacity: 80%;
+    opacity: 90%;
 }
 .pointer {
     cursor: pointer;
@@ -56,7 +92,7 @@
 
 .my-day {
     width: 35rem;
-    height: 74.5rem;
+    /* height: 74.5rem; */
     background-color: #222227;
     box-shadow: 0 0.5rem 3rem rgb(0 0 0 / 40%);
     transform: scale(0.7);
@@ -92,6 +128,10 @@
     text-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.5);
 }
 
+.delete {
+    left: 395px;
+    top: 20px;
+}
 .month i {
     font-size: 2.5rem;
     cursor: pointer;
@@ -165,3 +205,23 @@
 #month-bg {
     transition:  background-color 0.3s ease-in-out;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #191919;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #717171;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

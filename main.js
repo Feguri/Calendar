@@ -147,12 +147,12 @@ function addTask(){
     document.getElementById(`time-${taskNum}`).innerHTML = time1;
     document.getElementById(`time-2-${taskNum}`).innerHTML = time2;
 
-    dataBase[`${new Date().toDateString()}-${taskNum}`] = [taskInput, time1, time2, taskNum];
+    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum];
 
 
     function Delete(){
         document.getElementById(`${this.id}`).remove();
-        delete dataBase[`${new Date().toDateString()}-${extractNum(this.id)}`];
+        delete dataBase[`day-${extractNum(this.id)}`];
     }
     
     let currColor = 0;
@@ -190,14 +190,14 @@ document.getElementById('add-btn').addEventListener('click', addTask);
 
 function showAdder(){
 
-    if (dataBase['adderShown']){
-        document.getElementById('tdd').style.display = 'none';
-        dataBase['adderShown'] = false;
-    } else {
-        document.getElementById('tdd').style.display = 'block';
-        dataBase['adderShown'] = true;
-    }
-    
+        if (dataBase['adderShown']){
+          document.getElementById('tdd').style.display = 'none';
+          dataBase['adderShown'] = false;
+      } else {
+          document.getElementById('tdd').style.display = 'block';
+          dataBase['adderShown'] = true;
+      }
+
 }
 document.getElementById('adder').addEventListener('click', showAdder);
 
@@ -207,23 +207,34 @@ let dataBase = {
 
 window.onbeforeunload = function(){
     localStorage.setItem('database', JSON.stringify(dataBase));
+    localStorage.setItem('taskNum', JSON.stringify(taskNum));
+
+    // Uncomment code below to clear storage
+    // localStorage.clear();
 };
 
 window.onload =  function(){
-    let database = JSON.parse(localStorage.getItem('database'));
-    console.log(database);
+
+
+    let savedDataBase = JSON.parse(localStorage.getItem('database'));
+    let savedTaskNum = JSON.parse(localStorage.getItem('taskNum'))
+    if (dataBase !== null){
+      dataBase = savedDataBase;
+      taskNum = savedTaskNum;  
+    }
+
     
     // em vez de tasknum use info pega na localStorage
-    for (let key in database){
+    for (let key in dataBase){
 
-        console.log(database[key][0]);
+        console.log(dataBase[key][0]);
 
-        if (database[key][0] !== undefined){
+        if (dataBase[key][0] !== undefined){
 
-            let savedTextContent = database[key][0];
-            let savedTime1 = database[key][1];
-            let savedTime2 = database[key][2];
-            let savedTaskNum = database[key][3];
+            let savedTextContent = dataBase[key][0];
+            let savedTime1 = dataBase[key][1];
+            let savedTime2 = dataBase[key][2];
+            let savedTaskNum = dataBase[key][3];
 
             document.querySelector('.actual-tasks').innerHTML += `
             <div class="task-${savedTaskNum} mb-6" id="task-${savedTaskNum}">
@@ -244,6 +255,7 @@ window.onload =  function(){
     function Delete(){
         console.log(extractNum(this.id) );
         document.getElementById(`task-${extractNum(this.id)}`).remove();
+        delete dataBase[`day-${extractNum(this.id)}`];
     }
     for (let el of document.getElementsByClassName('delete')){
         el.addEventListener('click', Delete);

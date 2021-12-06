@@ -82,6 +82,8 @@ const renderCalendar = () => {
   for (let x = firstDayIndex; x > 0; x--) {
     days += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
   }
+  
+  let toIterate = [];
 
   for (let i = 1; i <= lastDay; i++) {
     if (
@@ -90,7 +92,8 @@ const renderCalendar = () => {
     ) {
       days += `<div class="today here">${i}</div>`;
     } else {
-      days += `<div>${i}</div>`;
+      days += `<div id="calendar-day-${i}">${i}</div>`;
+      toIterate.push(i);
     }
   }
 
@@ -98,6 +101,17 @@ const renderCalendar = () => {
     days += `<div class="next-date">${j}</div>`;
     monthDays.innerHTML = days;
   }
+  for(let num of toIterate){
+
+    function changeDay(){
+      
+      // insert code here. also, load up current day based on local storage
+      console.log(this.id);
+    };
+
+    document.getElementById(`calendar-day-${num}`).addEventListener('click', changeDay);
+
+    }
 };
 
 const changeBgColorBasedOnCurrentMonthOnTheCalendar = () => {

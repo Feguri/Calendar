@@ -227,8 +227,8 @@ textarea, input {
   }
 
 
-  /*!!!!!!!!!!! Uncomment to star working on responsiveness !!!!!!!!!!!!!*/
-  
+  /*!!!!!!!!!!! Uncomment to start working on responsiveness !!!!!!!!!!!!!*/
+
   @media only screen and (max-width: 1220px) {
 
     /* .wrapper{

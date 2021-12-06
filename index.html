@@ -17,12 +17,12 @@
                 <div class="header">
                     <h1>My day,</h1>
                     <div class="date">
-                        <p class="my-day-date current-date" style="font-size: 1.5rem;"></p>
+                        <p class="my-day-date current-date" id="date-date" style="font-size: 1.5rem;"></p>
                     </div>
                 </div>
                 <div class="tasks">
                     <p class="no-select pointer" id="adder"><span id="plus">+</span> <span class="align-1">Add Task</span> </p>
-                    <div class="task-container" style="display: none;" id="tdd">
+                    <div class="task-container" id="tdd">
 
                         <label for="task-name" ><p class="mb-2 is-size-4">Task</p></label>
                         <textarea class="textarea is-info" id="task-name" name="task-name"></textarea>
@@ -35,6 +35,17 @@
                                 <label for="from"><p class="mb-2">To</p></label>
                                 <input type="text" class="input is-info" id="to">
                             </div>
+                        </div>
+
+                        <p class="mb-2 mt-6">Every</p>
+                        <div class="day-of-the-week-container">
+                            <div class="circle-week unselectable pointer"id="week-0">M</div>
+                            <div class="circle-week unselectable pointer"id="week-1">T</div>
+                            <div class="circle-week unselectable pointer"id="week-2">W</div>
+                            <div class="circle-week unselectable pointer"id="week-3">T</div>
+                            <div class="circle-week unselectable pointer"id="week-4">F</div>
+                            <div class="circle-week unselectable pointer"id="week-5">S</div>
+                            <div class="circle-week unselectable pointer"id="week-6">S</div>
                         </div>
 
                         <button class="button is-primary mt-6 is-size-5" id="add-btn">Add</button>

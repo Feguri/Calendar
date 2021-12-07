@@ -207,12 +207,18 @@ function addTask(){
     let color = `background-color: ${colors[currColor]}`;
     console.log(color);
     
+    console.log(dataBase);
+    if(dataBase === null){
+      dataBase = {
 
+      }
+    }
     dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color];
 
 
     function Delete(){
         document.getElementById(`${this.id}`).remove();
+        console.log('deleted');
         delete dataBase[`day-${extractNum(this.id)}`];
     }
     
@@ -232,7 +238,6 @@ function addTask(){
             currColor = 0;
         }
 
-        console.log(color);
     }
 
     for (let el of document.getElementsByClassName('delete')){
@@ -248,6 +253,7 @@ function addTask(){
     document.getElementById(`time-2-${taskNum}`).here = taskNum;
 
     taskNum++;
+    console.log(taskNum);
 
     document.getElementById('tdd').style.display = 'none';
     dataBase['adderShown'] = false;
@@ -313,13 +319,17 @@ window.onload =  function(){
                     <span class="time is-size-5" id="time-2-${savedTaskNum}" style="${savedColor}">${savedTime2}</span>
                 </div>
             </div>`;
+
         }
     }
+
     function Delete(){
         console.log(extractNum(this.id) );
         document.getElementById(`task-${extractNum(this.id)}`).remove();
+        console.log('deleted the task');
         delete dataBase[`day-${extractNum(this.id)}`];
     }
+    
     for (let el of document.getElementsByClassName('delete')){
         el.addEventListener('click', Delete);
     }

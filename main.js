@@ -25,6 +25,7 @@ const colors = ['#673ab7', '#52417c', '#4ac3536b', 'rgb(63 81 181 / 25%)', '#00f
 function extractNum(str) {
     let nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
     let filteredStr = '';
+    console.log(str);
     for (let char of str){
       for (let num of nums){
         if (char === num){
@@ -70,7 +71,7 @@ for (let dayOfTheWeek of document.getElementsByClassName('circle-week')){
 let previousDivId;
 const renderCalendar = () => {
   function clearTasks(){
-    
+
     for (let task of document.getElementsByClassName('actual-tasks')){
       task.remove();
     }
@@ -136,11 +137,11 @@ const renderCalendar = () => {
       i === new Date().getDate() &&
       date.getMonth() === new Date().getMonth()
     ) {
-      days += `<div class="today here">${i}</div>`;
+      days += `<div class="today here" id="calendar-day-${i}">${i}</div>`;
     } else {
       days += `<div id="calendar-day-${i}">${i}</div>`;
-      toIterate.push(i);
     }
+    toIterate.push(i);
   }
 
   for (let j = 1; j <= nextDays; j++) {
@@ -171,6 +172,8 @@ const renderCalendar = () => {
 
       document.getElementById(this.id).style.backgroundColor = '#262626';
       document.getElementById(this.id).style.border = '0.2rem solid #777';
+      clearTasks();
+      renderSavedTasks();
       
       
     };
@@ -241,6 +244,7 @@ console.log(getDay(2020, 12, 19));
 function addTask(){
     console.log(dataBase);
 
+
     document.querySelector('.actual-tasks').innerHTML += `
         <div class="task-${taskNum} mb-6" id="task-${taskNum}">
             <button class="delete is-large" id="delete-${taskNum}"></button>
@@ -268,10 +272,9 @@ function addTask(){
     let color = `background-color: ${colors[currColor]}`;
 
     if(dataBase === null){
-      dataBase = {
-
-      }
+      dataBase = {};
     }
+
     dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected];
 
 
@@ -349,10 +352,9 @@ window.onload =  function(){
       dataBase = savedDataBase;
       taskNum = savedTaskNum;  
     }
-    // taskNum bug FIX IT
 
-    // em vez de tasknum use info pega na localStorage
-    for (let key in dataBase){
+    function renderSavedTasks(){
+      for (let key in dataBase){
 
         if (dataBase[key][0] !== undefined){
 
@@ -363,31 +365,39 @@ window.onload =  function(){
             let savedColor = dataBase[key][4];
             let daysOfTheWeek = dataBase[key][5];
 
-            document.querySelector('.actual-tasks').innerHTML += `
-            <div class="task-${savedTaskNum} mb-6" id="task-${savedTaskNum}">
-                <button class="delete is-large" id="delete-${savedTaskNum}"></button>
-                <div class="mb-5">
-                    <span class="time is-size-5" id="time-${savedTaskNum}" style="${savedColor}">${savedTime1}</span>
-                </div>
-                <div class="text-task" id="tt-${savedTaskNum}">
-                    <p id="${savedTaskNum}">${savedTextContent}</p>
-        
-                </div>
-                <div class="bottom-time">
-                    <span class="time is-size-5" id="time-2-${savedTaskNum}" style="${savedColor}">${savedTime2}</span>
-                </div>
-            </div>`;
+            let day1 = extractNum(this.id);
+            let year1 = date.getFullYear();
+            let ddWeek1 = getDayString(Number(year1), getMonth(document.getElementById('month').innerHTML), day1);
+            if (daysOfTheWeek[ddWeek1]){
+              document.querySelector('.actual-tasks').innerHTML += `
+              <div class="task-${savedTaskNum} mb-6" id="task-${savedTaskNum}">
+                  <button class="delete is-large" id="delete-${savedTaskNum}"></button>
+                  <div class="mb-5">
+                      <span class="time is-size-5" id="time-${savedTaskNum}" style="${savedColor}">${savedTime1}</span>
+                  </div>
+                  <div class="text-task" id="tt-${savedTaskNum}">
+                      <p id="${savedTaskNum}">${savedTextContent}</p>
+          
+                  </div>
+                  <div class="bottom-time">
+                      <span class="time is-size-5" id="time-2-${savedTaskNum}" style="${savedColor}">${savedTime2}</span>
+                  </div>
+              </div>`;
+            }
 
         }
     }
 
-    function Delete(){
-        document.getElementById(`task-${extractNum(this.id)}`).remove();
-        delete dataBase[`day-${extractNum(this.id)}`];
-    }
+      function Delete(){
+          document.getElementById(`task-${extractNum(this.id)}`).remove();
+          delete dataBase[`day-${extractNum(this.id)}`];
+      }
 
-    for (let el of document.getElementsByClassName('delete')){
-        el.addEventListener('click', Delete);
+      for (let el of document.getElementsByClassName('delete')){
+          el.addEventListener('click', Delete);
+      }
     }
+    renderSavedTasks();
+
 }
 

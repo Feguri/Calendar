@@ -36,7 +36,6 @@ function extractNum(str) {
 }
 
 function firstThreeLetters(str){
-  console.log(str);
   let final = '';
   for (let i = 0; i < 3; i++){
     if (i === 0){
@@ -67,7 +66,16 @@ for (let dayOfTheWeek of document.getElementsByClassName('circle-week')){
 
   });
 }
+
+let previousDivId;
 const renderCalendar = () => {
+  function clearTasks(){
+    
+    for (let task of document.getElementsByClassName('actual-tasks')){
+      task.remove();
+    }
+
+  }
   date.setDate(1);
 
   const monthDays = document.querySelector(".days");
@@ -150,7 +158,20 @@ const renderCalendar = () => {
       let year = date.getFullYear();
       let ddWeek = getDayString(Number(year), getMonth(document.getElementById('month').innerHTML), day);
 
-      document.getElementById('date-date').innerHTML = `${firstThreeLetters(ddWeek)} ${month} ${day} ${year}`;
+      if (previousDivId === undefined){
+          previousDivId = this.id;
+      } else {
+          document.getElementById(previousDivId).style.backgroundColor = '#222227';
+          document.getElementById(previousDivId).style.border = 'none';
+          previousDivId = this.id;
+      }
+
+      document.getElementById('date-date').innerHTML = `${ddWeek},  ${month} ${day} ${year}`;
+      document.getElementById('date-in').innerHTML = `${firstThreeLetters(ddWeek)} ${month} ${day} ${year}`;
+
+      document.getElementById(this.id).style.backgroundColor = '#262626';
+      document.getElementById(this.id).style.border = '0.2rem solid #777';
+      
       
     };
 

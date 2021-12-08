@@ -36,6 +36,7 @@ function extractNum(str) {
 }
 
 function firstThreeLetters(str){
+  console.log(str);
   let final = '';
   for (let i = 0; i < 3; i++){
     if (i === 0){
@@ -146,8 +147,11 @@ const renderCalendar = () => {
       // oh and save the color of the task in local storage. it's nice.
       let month = firstThreeLetters(document.getElementById('month').innerHTML);
       let day = extractNum(this.id);
-      document.getElementById('date-date').innerHTML = `${month} ${day}`;
-      console.log(month, day);
+      let year = date.getFullYear();
+      let ddWeek = getDayString(Number(year), getMonth(document.getElementById('month').innerHTML), day);
+
+      document.getElementById('date-date').innerHTML = `${firstThreeLetters(ddWeek)} ${month} ${day} ${year}`;
+      
     };
 
     document.getElementById(`calendar-day-${num}`).addEventListener('click', changeDay);
@@ -179,7 +183,43 @@ document.getElementsByClassName('here')[0].style.backgroundColor = colorOfTheMon
 
 let taskNum = 1;
 
+function getDay(y, m, d) {
+  let h = new Date(y, --m, d);
+  return h.getDay();
+}
+function getMonth(str){
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  for (let month of months){
+    if (str.toUpperCase() === month.toUpperCase()){
+      return months.indexOf(month) + 1;
+    }
+  }
+  return 0;
+}
+
+function getDayString(y, m, d) {
+  let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  let h = new Date(y, --m, d);
+  return h && days[h.getDay()];
+}
+console.log(getDay(2020, 12, 19));
+
 function addTask(){
+    console.log(dataBase);
+
     document.querySelector('.actual-tasks').innerHTML += `
         <div class="task-${taskNum} mb-6" id="task-${taskNum}">
             <button class="delete is-large" id="delete-${taskNum}"></button>
@@ -205,20 +245,17 @@ function addTask(){
     let currColor = 0;
 
     let color = `background-color: ${colors[currColor]}`;
-    console.log(color);
-    
-    console.log(dataBase);
+
     if(dataBase === null){
       dataBase = {
 
       }
     }
-    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color];
+    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected];
 
 
     function Delete(){
-        document.getElementById(`${this.id}`).remove();
-        console.log('deleted');
+        document.getElementById(`task-${extractNum(this.id)}`).remove();
         delete dataBase[`day-${extractNum(this.id)}`];
     }
     
@@ -253,7 +290,6 @@ function addTask(){
     document.getElementById(`time-2-${taskNum}`).here = taskNum;
 
     taskNum++;
-    console.log(taskNum);
 
     document.getElementById('tdd').style.display = 'none';
     dataBase['adderShown'] = false;
@@ -304,6 +340,7 @@ window.onload =  function(){
             let savedTime2 = dataBase[key][2];
             let savedTaskNum = dataBase[key][3];
             let savedColor = dataBase[key][4];
+            let daysOfTheWeek = dataBase[key][5];
 
             document.querySelector('.actual-tasks').innerHTML += `
             <div class="task-${savedTaskNum} mb-6" id="task-${savedTaskNum}">
@@ -324,12 +361,10 @@ window.onload =  function(){
     }
 
     function Delete(){
-        console.log(extractNum(this.id) );
         document.getElementById(`task-${extractNum(this.id)}`).remove();
-        console.log('deleted the task');
         delete dataBase[`day-${extractNum(this.id)}`];
     }
-    
+
     for (let el of document.getElementsByClassName('delete')){
         el.addEventListener('click', Delete);
     }

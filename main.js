@@ -2,8 +2,9 @@ const date = new Date();
 let dataBase = {
   'adderShown': false,
 }
+let daySelected = date.getDate();
+let taskNum = 1;
 
-// starting on monday
 let daysOfTheWeekSelected = [false, false, false, false, false, false, false];
 
 const colorOfTheMonths = {
@@ -25,7 +26,6 @@ const colors = ['#673ab7', '#52417c', '#4ac3536b', 'rgb(63 81 181 / 25%)', '#00f
 function extractNum(str) {
     let nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
     let filteredStr = '';
-    console.log(str);
     for (let char of str){
       for (let num of nums){
         if (char === num){
@@ -66,6 +66,7 @@ for (let dayOfTheWeek of document.getElementsByClassName('circle-week')){
     }
 
   });
+  
 }
 
 let previousDivId;
@@ -137,9 +138,9 @@ const renderCalendar = () => {
       i === new Date().getDate() &&
       date.getMonth() === new Date().getMonth()
     ) {
-      days += `<div class="today here" id="calendar-day-${i}">${i}</div>`;
+      days += `<div class="today here hover-day" id="calendar-day-${i}">${i}</div>`;
     } else {
-      days += `<div id="calendar-day-${i}">${i}</div>`;
+      days += `<div id="calendar-day-${i}" class="hover-day">${i}</div>`;
     }
     toIterate.push(i);
   }
@@ -156,25 +157,97 @@ const renderCalendar = () => {
       // oh and save the color of the task in local storage. it's nice.
       let month = firstThreeLetters(document.getElementById('month').innerHTML);
       let day = extractNum(this.id);
+      daySelected = day;
       let year = date.getFullYear();
       let ddWeek = getDayString(Number(year), getMonth(document.getElementById('month').innerHTML), day);
 
       if (previousDivId === undefined){
           previousDivId = this.id;
       } else {
+        try {
           document.getElementById(previousDivId).style.backgroundColor = '#222227';
           document.getElementById(previousDivId).style.border = 'none';
           previousDivId = this.id;
+        } catch(err){
+
+        }
+
       }
 
       document.getElementById('date-date').innerHTML = `${ddWeek},  ${month} ${day} ${year}`;
-      document.getElementById('date-in').innerHTML = `${firstThreeLetters(ddWeek)} ${month} ${day} ${year}`;
+      document.getElementById('date-in').innerHTML = `${ddWeek},  ${month} ${day} ${year}`;
+      
+      // This just solved 2 problems at the same time :O
+      for (let el of document.getElementsByClassName('hover-day')){
+        el.removeAttribute('style');
+      }
 
       document.getElementById(this.id).style.backgroundColor = '#262626';
       document.getElementById(this.id).style.border = '0.2rem solid #777';
-      clearTasks();
-      renderSavedTasks();
-      
+
+
+      for (let key in dataBase){
+
+        if (dataBase[key][0] !== undefined){
+
+            function renderSavedTasks(){
+              let weekDaySelected = getDay(Number(year), getMonth(document.getElementById('month').innerHTML), day) - 1;
+
+              for (let key in dataBase){
+        
+                if (dataBase[key][0] !== undefined){
+        
+                    let savedTextContent = dataBase[key][0];
+                    let savedTime1 = dataBase[key][1];
+                    let savedTime2 = dataBase[key][2];
+                    let savedTaskNum = dataBase[key][3];
+                    let savedColor = dataBase[key][4];
+                    dataBase[key][5] = JSON.parse(localStorage.getItem(`weekly-schedule-${savedTaskNum}`));
+
+
+                    if (dataBase[key][5][weekDaySelected] === undefined){
+                      weekDaySelected = 6;
+                    }
+
+                    if (!dataBase[key][5][weekDaySelected]){
+                      // console.log(dataBase[key][5]);
+                      document.getElementById(`task-${savedTaskNum}`).style.display = 'none';
+                    } else {
+                      document.getElementById(`task-${savedTaskNum}`).style.display = 'block';
+                    }
+
+                    let month12 = firstThreeLetters(document.getElementById('month').innerHTML);
+                    let day12 = daySelected;
+                    let year12 = date.getFullYear();
+                    let cdate12 = year + "/" + month + "/" + day;
+                    if (dataBase[key][6] === cdate12){
+                      document.getElementById(`task-${savedTaskNum}`).style.display = 'block';
+                    }
+
+        
+                }
+            } 
+        
+              function Delete(){
+                try {
+                  document.getElementById(`task-${extractNum(this.id)}`).remove();
+                  delete dataBase[`day-${extractNum(this.id)}`];
+                 } catch(err){
+                  document.getElementById(`task-null`).remove();
+                  delete dataBase[`day-null`];
+                 }
+              }
+        
+              for (let el of document.getElementsByClassName('delete')){
+                  el.addEventListener('click', Delete);
+              }
+            }
+
+            renderSavedTasks();
+            
+
+        }
+    }
       
     };
 
@@ -185,6 +258,7 @@ const renderCalendar = () => {
 
 const changeBgColorBasedOnCurrentMonthOnTheCalendar = () => {
     document.getElementById('month-bg').style.backgroundColor = colorOfTheMonths[document.getElementById('month').innerHTML];
+    document.querySelector('.header').style.backgroundColor = colorOfTheMonths[document.getElementById('month').innerHTML];
     
 }
 
@@ -205,7 +279,6 @@ document.querySelector(".next").addEventListener("click", () => {
 renderCalendar();
 document.getElementsByClassName('here')[0].style.backgroundColor = colorOfTheMonths[document.getElementById('month').innerHTML];
 
-let taskNum = 1;
 
 function getDay(y, m, d) {
   let h = new Date(y, --m, d);
@@ -239,14 +312,11 @@ function getDayString(y, m, d) {
   let h = new Date(y, --m, d);
   return h && days[h.getDay()];
 }
-console.log(getDay(2020, 12, 19));
 
 function addTask(){
-    console.log(dataBase);
-
-
+    
     document.querySelector('.actual-tasks').innerHTML += `
-        <div class="task-${taskNum} mb-6" id="task-${taskNum}">
+        <div class="task-${taskNum} mb-6 task" id="task-${taskNum}">
             <button class="delete is-large" id="delete-${taskNum}"></button>
             <div class="mb-5">
                 <span class="time is-size-5" id="time-${taskNum}"></span>
@@ -267,6 +337,8 @@ function addTask(){
     document.getElementById(`time-${taskNum}`).innerHTML = time1;
     document.getElementById(`time-2-${taskNum}`).innerHTML = time2;
 
+    document.getElementById(String(taskNum)).style.padding = `${document.getElementById('size').value} 0px`;
+
     let currColor = 0;
 
     let color = `background-color: ${colors[currColor]}`;
@@ -275,12 +347,24 @@ function addTask(){
       dataBase = {};
     }
 
-    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected];
+    let month = firstThreeLetters(document.getElementById('month').innerHTML);
+    let day = daySelected;
+    let year = date.getFullYear();
+    let cdate = year + "/" + month + "/" + day;
+    
+    let size = document.getElementById('size').value
 
+    // Very Important!
+    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected, cdate, size];
 
     function Delete(){
+      try {
         document.getElementById(`task-${extractNum(this.id)}`).remove();
         delete dataBase[`day-${extractNum(this.id)}`];
+       } catch(err){
+        document.getElementById(`task-null`).remove();
+        delete dataBase[`day-null`];
+       }
     }
     
 
@@ -313,24 +397,27 @@ function addTask(){
     document.getElementById(`time-${taskNum}`).here = taskNum;
     document.getElementById(`time-2-${taskNum}`).here = taskNum;
 
+    localStorage.setItem(`weekly-schedule-${taskNum}`, JSON.stringify(daysOfTheWeekSelected));
     taskNum++;
 
     document.getElementById('tdd').style.display = 'none';
     dataBase['adderShown'] = false;
+
+    console.log(dataBase);
 }
 document.getElementById('add-btn').addEventListener('click', addTask);
 
-
+let adderShown = false;
 function showAdder(){
 
-        if (dataBase['adderShown']){
+        if (adderShown){
           document.getElementById('tdd').style.display = 'none';
-          dataBase['adderShown'] = false;
+          adderShown = false;
       } else {
           document.getElementById('tdd').style.display = 'block';
-          dataBase['adderShown'] = true;
+          adderShown = true;
       }
-
+      
 }
 document.getElementById('adder').addEventListener('click', showAdder);
 
@@ -338,7 +425,7 @@ window.onbeforeunload = function(){
     localStorage.setItem('database', JSON.stringify(dataBase));
     localStorage.setItem('taskNum', JSON.stringify(taskNum));
 
-    // Uncomment code below to clear storage
+    // Uncomment code below and reset browser to clear storage
     // localStorage.clear();
 };
 
@@ -347,6 +434,7 @@ window.onload =  function(){
 
     let savedDataBase = JSON.parse(localStorage.getItem('database'));
     let savedTaskNum = JSON.parse(localStorage.getItem('taskNum'));
+    
     
     if (dataBase !== null){
       dataBase = savedDataBase;
@@ -363,41 +451,79 @@ window.onload =  function(){
             let savedTime2 = dataBase[key][2];
             let savedTaskNum = dataBase[key][3];
             let savedColor = dataBase[key][4];
-            let daysOfTheWeek = dataBase[key][5];
+            dataBase[key][5] = JSON.parse(localStorage.getItem(`weekly-schedule-${savedTaskNum}`));
 
-            let day1 = extractNum(this.id);
-            let year1 = date.getFullYear();
-            let ddWeek1 = getDayString(Number(year1), getMonth(document.getElementById('month').innerHTML), day1);
-            if (daysOfTheWeek[ddWeek1]){
-              document.querySelector('.actual-tasks').innerHTML += `
-              <div class="task-${savedTaskNum} mb-6" id="task-${savedTaskNum}">
-                  <button class="delete is-large" id="delete-${savedTaskNum}"></button>
-                  <div class="mb-5">
-                      <span class="time is-size-5" id="time-${savedTaskNum}" style="${savedColor}">${savedTime1}</span>
-                  </div>
-                  <div class="text-task" id="tt-${savedTaskNum}">
-                      <p id="${savedTaskNum}">${savedTextContent}</p>
-          
-                  </div>
-                  <div class="bottom-time">
-                      <span class="time is-size-5" id="time-2-${savedTaskNum}" style="${savedColor}">${savedTime2}</span>
-                  </div>
-              </div>`;
+            const hasWeeklySchedule = () => {
+              for(let item of dataBase[key][5]){
+                if (item){
+                  return true;
+                }
+              }
+              return false;
             }
+
+            let month3 = firstThreeLetters(document.getElementById('month').innerHTML);
+            let day3 = daySelected;
+            let year3 = date.getFullYear();
+            let cdate3 = year3 + "/" + month3 + "/" + day3;
+            // This will prevent specific-day tasks from loading on reload. Still need to work on it.
+
+            document.querySelector('.actual-tasks').innerHTML += `
+            <div class="task-${savedTaskNum} mb-6 task" id="task-${savedTaskNum}">
+                <button class="delete is-large" id="delete-${savedTaskNum}"></button>
+                <div class="mb-5">
+                    <span class="time is-size-5" id="time-${savedTaskNum}" style="${savedColor}">${savedTime1}</span>
+                </div>
+                <div class="text-task" id="tt-${savedTaskNum}">
+                    <p id="${savedTaskNum}">${savedTextContent}</p>
+        
+                </div>
+                <div class="bottom-time">
+                    <span class="time is-size-5" id="time-2-${savedTaskNum}" style="${savedColor}">${savedTime2}</span>
+                </div>
+            </div>`;
+
+            console.log(dataBase[key][7]);
+            if (dataBase[key][7] !== undefined){
+              document.getElementById(String(savedTaskNum)).style.padding = `${dataBase[key][7]} 0px`;
+            }
+            
 
         }
     }
 
       function Delete(){
+         try {
           document.getElementById(`task-${extractNum(this.id)}`).remove();
           delete dataBase[`day-${extractNum(this.id)}`];
+         } catch(err){
+          document.getElementById(`task-null`).remove();
+          delete dataBase[`day-null`];
+         }
+
       }
 
       for (let el of document.getElementsByClassName('delete')){
           el.addEventListener('click', Delete);
       }
+      
     }
     renderSavedTasks();
+    for (let key in dataBase){
+      let month4 = firstThreeLetters(document.getElementById('month').innerHTML);
+      let day4 = daySelected;
+      let year4 = date.getFullYear();
+      let cdate4 = year4 + "/" + month4 + "/" + day4;
+    
+      if (dataBase[key][0] !== undefined){
+        if (dataBase[key][6] !== cdate4){
+          console.log(dataBase[key][6], cdate4, extractNum(key) );
+          document.getElementById(`task-${extractNum(key)}`).style.display = 'none';
+        }
+      }
+      
+
+    }
 
 }
 

@@ -8,7 +8,7 @@ let taskNum = 1;
 let daysOfTheWeekSelected = [false, false, false, false, false, false, false];
 
 const colorOfTheMonths = {
-    "January": '#673ab7',
+    "January": '#3f51b5',
     "February": '#52417c',
     "March": '#4ac3536b',
     "April": 'rgb(63 81 181 / 25%)',
@@ -19,9 +19,9 @@ const colorOfTheMonths = {
     "September": '#a0591c',
     "October": '#ff3b3b57',
     "November": '#151515',
-    "December": '#3f51b5',
+    "December": '#673ab7',
 }
-const colors = ['#673ab7', '#52417c', '#4ac3536b', 'rgb(63 81 181 / 25%)', '#00ff3736', 'rgb(15 128 142)', '#0e617a', '#004d40', '#a0591c', '#ff3b3b57', '#151515','#3f51b5']
+const colors = ['#3f51b5', '#52417c', '#4ac3536b', 'rgb(63 81 181 / 25%)', '#00ff3736', 'rgb(15 128 142)', '#0e617a', '#004d40', '#a0591c', '#ff3b3b57', '#151515','#673ab7']
 
 function extractNum(str) {
     let nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
@@ -202,6 +202,8 @@ const renderCalendar = () => {
                     let savedTime2 = dataBase[key][2];
                     let savedTaskNum = dataBase[key][3];
                     let savedColor = dataBase[key][4];
+                    let savedResume = dataBase[key][8];
+
                     dataBase[key][5] = JSON.parse(localStorage.getItem(`weekly-schedule-${savedTaskNum}`));
 
 
@@ -219,9 +221,12 @@ const renderCalendar = () => {
                     let month12 = firstThreeLetters(document.getElementById('month').innerHTML);
                     let day12 = daySelected;
                     let year12 = date.getFullYear();
-                    let cdate12 = year + "/" + month + "/" + day;
+                    let cdate12 = year12 + "/" + month12 + "/" + day12;
                     if (dataBase[key][6] === cdate12){
                       document.getElementById(`task-${savedTaskNum}`).style.display = 'block';
+
+                      // console.log(dataBase[key][6], cdate12, 'here');
+                      // document.querySelector('.resumes').innerHTML = `${savedResume}`;
                     }
 
         
@@ -314,6 +319,7 @@ function getDayString(y, m, d) {
 }
 
 function addTask(){
+    resume = document.getElementById('resume').value
     
     document.querySelector('.actual-tasks').innerHTML += `
         <div class="task-${taskNum} mb-6 task" id="task-${taskNum}">
@@ -328,8 +334,14 @@ function addTask(){
             <div class="bottom-time">
                 <span class="time is-size-5" id="time-2-${taskNum}"></span>
             </div>
+            
         </div>`;
+
+        document.querySelector('.resumes').innerHTML += `${resume}`;
+
+
     taskInput = document.getElementById('task-name').value;
+    resume = document.getElementById('resume').value
 
     time1 = document.getElementById('from').value;
     time2 = document.getElementById('to').value;
@@ -355,7 +367,7 @@ function addTask(){
     let size = document.getElementById('size').value
 
     // Very Important!
-    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected, cdate, size];
+    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected, cdate, size, resume];
 
     function Delete(){
       try {
@@ -451,7 +463,9 @@ window.onload =  function(){
             let savedTime2 = dataBase[key][2];
             let savedTaskNum = dataBase[key][3];
             let savedColor = dataBase[key][4];
+            let savedDate = dataBase[key][6];
             dataBase[key][5] = JSON.parse(localStorage.getItem(`weekly-schedule-${savedTaskNum}`));
+            let savedResume = dataBase[key][8];
 
             const hasWeeklySchedule = () => {
               for(let item of dataBase[key][5]){
@@ -474,7 +488,7 @@ window.onload =  function(){
                 <div class="mb-5">
                     <span class="time is-size-5" id="time-${savedTaskNum}" style="${savedColor}">${savedTime1}</span>
                 </div>
-                <div class="text-task" id="tt-${savedTaskNum}">
+                <div class="text-task" id="tt-${savedTaskNum}" style="border-left: 3px solid #${savedColor.split('#')[1]}">
                     <p id="${savedTaskNum}">${savedTextContent}</p>
         
                 </div>
@@ -483,7 +497,13 @@ window.onload =  function(){
                 </div>
             </div>`;
 
-            console.log(dataBase[key][7]);
+
+            // if (savedDate = cdate3){
+            //   console.log(savedDate = cdate3);
+            //   document.querySelector('.resumes').innerHTML += `${savedResume}`;
+            // }
+            
+
             if (dataBase[key][7] !== undefined){
               document.getElementById(String(savedTaskNum)).style.padding = `${dataBase[key][7]} 0px`;
             }
@@ -517,13 +537,13 @@ window.onload =  function(){
     
       if (dataBase[key][0] !== undefined){
         if (dataBase[key][6] !== cdate4){
-          console.log(dataBase[key][6], cdate4, extractNum(key) );
           document.getElementById(`task-${extractNum(key)}`).style.display = 'none';
         }
       }
       
 
     }
+    document.querySelector('.today').style.backgroundColor = `${window.getComputedStyle( document.getElementById('month-bg') ,null).getPropertyValue('background-color')}`;
 
 }
 

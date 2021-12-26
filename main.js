@@ -319,7 +319,6 @@ function getDayString(y, m, d) {
 }
 
 function addTask(){
-    resume = document.getElementById('resume').value
     
     document.querySelector('.actual-tasks').innerHTML += `
         <div class="task-${taskNum} mb-6 task" id="task-${taskNum}">
@@ -337,11 +336,8 @@ function addTask(){
             
         </div>`;
 
-        document.querySelector('.resumes').innerHTML += `${resume}`;
-
 
     taskInput = document.getElementById('task-name').value;
-    resume = document.getElementById('resume').value
 
     time1 = document.getElementById('from').value;
     time2 = document.getElementById('to').value;
@@ -367,7 +363,7 @@ function addTask(){
     let size = document.getElementById('size').value
 
     // Very Important!
-    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected, cdate, size, resume];
+    dataBase[`day-${taskNum}`] = [taskInput, time1, time2, taskNum, color, daysOfTheWeekSelected, cdate, size];
 
     function Delete(){
       try {
@@ -414,8 +410,6 @@ function addTask(){
 
     document.getElementById('tdd').style.display = 'none';
     dataBase['adderShown'] = false;
-
-    console.log(dataBase);
 }
 document.getElementById('add-btn').addEventListener('click', addTask);
 
